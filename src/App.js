@@ -4,6 +4,7 @@ import Table from './components/Table'
 import Button from './components/Button'
 
 const urlService = process.env.SERVICE_URL + "/pessoas"
+console.log("Service URL: "+urlService)
 
 const initPessoa = {
     id: 0,
