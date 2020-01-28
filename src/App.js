@@ -4,7 +4,6 @@ import Table from './components/Table'
 import Button from './components/Button'
 
 const urlService = process.env.SERVICE_URL + "/pessoas"
-console.log("Service URL: "+urlService)
 
 const initPessoa = {
     id: 0,
@@ -74,7 +73,7 @@ const App = () => {
 
     return (
         <div>
-            <h1>Pessoas</h1>
+            <h1>Pessoas {urlService}</h1>
             <div>
                 <Table header={['ID', 'Nome', 'Idade', 'Editar', 'Deletar']}
                     rows={pessoas}
