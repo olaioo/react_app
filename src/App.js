@@ -3,7 +3,7 @@ import axios from 'axios'
 import Table from './components/Table'
 import Button from './components/Button'
 
-const urlService = process.env.REACT_APP_SERVICE_URL + "/pessoas"
+const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + "/pessoas"
 
 const initPessoa = {
     id: 0,
