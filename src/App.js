@@ -3,7 +3,7 @@ import axios from 'axios'
 import Table from './components/Table'
 import Button from './components/Button'
 
-const urlService = process.env.SERVICE_URL + "/pessoas"
+const urlService = process.env.REACT_APP_SERVICE_URL + "/pessoas"
 
 const initPessoa = {
     id: 0,
@@ -53,6 +53,7 @@ const App = () => {
 
     const addPessoa = (event) => {
         event.preventDefault()
+        console.log(urlService)
         if (editarPessoa) {
             axios.put(urlService+"/"+newPessoa.id, newPessoa).then(response =>{
                 updatePessoas(setPessoas)
@@ -73,7 +74,7 @@ const App = () => {
 
     return (
         <div>
-            <h1>Pessoas {urlService}</h1>
+            <h1>Pessoas</h1>
             <div>
                 <Table header={['ID', 'Nome', 'Idade', 'Editar', 'Deletar']}
                     rows={pessoas}
