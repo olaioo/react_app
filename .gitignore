@@ -6,7 +6,7 @@ node_modules/
 flask/
 
 #Enviroment vars
-.env
+.env*
 
 # IntelliJ specific files/directories
 out

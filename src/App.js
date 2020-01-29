@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import Table from './components/Table'
-import Button from './components/Button'
 
 const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + "/pessoas"
 
