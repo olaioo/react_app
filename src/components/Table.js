@@ -7,7 +7,7 @@ const Table = ({ header, rows, buttons}) => {
     const renderHeader = () => (
         <thead>
             <tr>
-                {header.map((cell, i) => renderCell(cell, i))}
+                {header.map((cell, i) => renderCell(Object.keys(cell)[0], i))}
             </tr>
         </thead>
     )
@@ -18,6 +18,14 @@ const Table = ({ header, rows, buttons}) => {
         </td>
     )
 
+    const renderCellByAtt = (row, att, i) => {
+        if (att.buttonListener) {
+            return renderCell(<Button listener={att.buttonListener(row.id)} name={Object.values(att)[0]}/>,i)
+        } else {
+            return renderCell(row[Object.values(att)[0]], i)
+        }
+    }
+
     const renderRows = () => (
         <tbody>
             {rows.map((row, i) => renderRow(row, i))}
@@ -25,12 +33,9 @@ const Table = ({ header, rows, buttons}) => {
     )
 
     const renderRow = (row, i) => {
-        buttons.forEach(button => {
-            row={...row, ['button_'+button.name]: <Button listener={button.listener(row.id)} name={button.name}/>}
-        })
         return (
             <tr key={i}>
-                {Object.values(row).map((cell, i) => renderCell(cell, i))}
+                {header.map((att, i) => renderCellByAtt(row, att, i))}
             </tr>
         )
     }
@@ -38,7 +43,7 @@ const Table = ({ header, rows, buttons}) => {
     return (
         <table>
             {renderHeader()}
-            {rows.length>0? renderRows():null}
+            {rows.length>0 && renderRows()}
         </table>
     )
 }

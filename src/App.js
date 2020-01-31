@@ -75,9 +75,10 @@ const App = () => {
         <div>
             <h1>Pessoas</h1>
             <div>
-                <Table header={['ID', 'Nome', 'Idade', 'Editar', 'Deletar']}
-                    rows={pessoas}
-                    buttons={[{ name: 'editar', listener: editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa) }, { name: 'excluir', listener: delPessoaHandler(pessoas, setPessoas) }]} />
+                <Table header={[{'ID': 'id'}, {'Nome': 'name'}, {'Idade': 'age'},
+                 {'Editar':'editar', 'buttonListener': editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa)}, 
+                 {'Deletar':'excluir', 'buttonListener': delPessoaHandler(pessoas, setPessoas)}]}
+                    rows={pessoas}/>
             </div>
             <h1>{editarPessoa ? 'Editar Pessoa' : 'Adicionar Pessoa'}</h1>
             <form onSubmit={addPessoa}>
@@ -88,9 +89,8 @@ const App = () => {
                     <label>Age: </label><input onChange={newAgeHandler} value={newPessoa.age} />
                 </div>
                 <button type='submit'>Gravar</button>
-                {editarPessoa ?
+                {editarPessoa &&
                     <button onClick={cancelarEdicao(setEditarPessoa, setNewPessoa)}>Cancelar</button>
-                    : ''
                 }
             </form>
         </div>
