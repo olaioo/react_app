@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import Login from './Login'
 import Table from './components/Table'
+import Documento from './Documento'
 
 const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + "/pessoas"
 
 const initPessoa = {
     id: 0,
     name: '',
-    age: ''
+    age: '',
+    password: ''
 }
 
 const delPessoaHandler = (pessoas, setPessoas) => (id) => () => {
@@ -37,6 +40,7 @@ const App = () => {
     const [pessoas, setPessoas] = useState([])
     const [newPessoa, setNewPessoa] = useState(initPessoa)
     const [editarPessoa, setEditarPessoa] = useState(false)
+    const [token, setToken] = useState()
 
     useEffect(() => {
         updatePessoas(setPessoas)
@@ -48,6 +52,10 @@ const App = () => {
 
     const newAgeHandler = (event) => {
         setNewPessoa({ ...newPessoa, age: event.target.value })
+    }
+
+    const newPasswordHandler = (event) => {
+        setNewPessoa({ ...newPessoa, password: event.target.value })
     }
 
     const addPessoa = (event) => {
@@ -73,12 +81,21 @@ const App = () => {
 
     return (
         <div>
+            {!token ? <>
+                <h1>Login</h1>
+                <Login setToken={setToken}/>
+                </>
+            : <>
             <h1>Pessoas</h1>
             <div>
-                <Table header={[{'ID': 'id'}, {'Nome': 'name'}, {'Idade': 'age'},
-                 {'Editar':'editar', 'buttonListener': editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa)}, 
-                 {'Deletar':'excluir', 'buttonListener': delPessoaHandler(pessoas, setPessoas)}]}
-                    rows={pessoas}/>
+                <Table content={pessoas}
+                    structure={[{'ID': 'id'},
+                                {'Nome': 'name'}, 
+                                {'Idade': 'age'},
+                                {'Documentos': 'documentos', 'structure': [{'ID': 'id'}, {'Conteúdo': 'content'}]},
+                                {'Editar':'editar', 'buttonListener': editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa)}, 
+                                {'Deletar':'excluir', 'buttonListener': delPessoaHandler(pessoas, setPessoas)}
+                                ]}/>
             </div>
             <h1>{editarPessoa ? 'Editar Pessoa' : 'Adicionar Pessoa'}</h1>
             <form onSubmit={addPessoa}>
@@ -88,12 +105,18 @@ const App = () => {
                 <div>
                     <label>Age: </label><input onChange={newAgeHandler} value={newPessoa.age} />
                 </div>
+                {!editarPessoa && <div>
+                    <label>Password: </label><input type='password' onChange={newPasswordHandler} value={newPessoa.password} />
+                </div>}
                 <button type='submit'>Gravar</button>
                 {editarPessoa &&
                     <button onClick={cancelarEdicao(setEditarPessoa, setNewPessoa)}>Cancelar</button>
                 }
             </form>
+            <Documento token={token}/> </>
+            }
         </div>
+
     )
 }
 

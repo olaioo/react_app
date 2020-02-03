@@ -1,13 +1,13 @@
 import React from 'react'
 import Button from './Button'
 
-const Table = ({ header, rows, buttons}) => {
-    //const header = Object.keys(rows[0])
+const Table = ({ structure, content}) => {
+    //const structure = Object.keys(content[0])
 
-    const renderHeader = () => (
+    const renderStructure = () => (
         <thead>
             <tr>
-                {header.map((cell, i) => renderCell(Object.keys(cell)[0], i))}
+                {structure.map((cell, i) => renderCell(Object.keys(cell)[0], i))}
             </tr>
         </thead>
     )
@@ -21,29 +21,31 @@ const Table = ({ header, rows, buttons}) => {
     const renderCellByAtt = (row, att, i) => {
         if (att.buttonListener) {
             return renderCell(<Button listener={att.buttonListener(row.id)} name={Object.values(att)[0]}/>,i)
+        } else if (att.structure) {
+            return renderCell(<Table structure={att.structure} content={row[Object.values(att)[0]]}/>)
         } else {
             return renderCell(row[Object.values(att)[0]], i)
         }
     }
 
-    const renderRows = () => (
+    const renderContent = () => (
         <tbody>
-            {rows.map((row, i) => renderRow(row, i))}
+            {content.map((row, i) => renderRow(row, i))}
         </tbody>
     )
 
     const renderRow = (row, i) => {
         return (
             <tr key={i}>
-                {header.map((att, i) => renderCellByAtt(row, att, i))}
+                {structure.map((att, i) => renderCellByAtt(row, att, i))}
             </tr>
         )
     }
 
     return (
         <table>
-            {renderHeader()}
-            {rows.length>0 && renderRows()}
+            {renderStructure()}
+            {content && content.length>0 && renderContent()}
         </table>
     )
 }
