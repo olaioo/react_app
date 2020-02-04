@@ -8,19 +8,19 @@ const initDocumento = {
     important: false
 }
 
-const Documento = ({token}) => {
+const Documento = ({token, doc}) => {
+    const [documento, setDocumento] = useState(initDocumento)
 
     const config = {    
         headers: { Authorization: "bearer " + token.token }, 
     }
-
-    const [documento, setDocumento] = useState(initDocumento)
 
     const saveDocumentoHandler = (event) => {
         event.preventDefault()
 
         axios.post(urlBase, {...documento, pessoa: token.id}, config).then(response => {
             setDocumento(initDocumento)
+            doc.current.toggleVisibility()
         })
     }
 

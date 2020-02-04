@@ -15,7 +15,10 @@ const Login = ({setToken}) => {
             console.log(response)
             setToken(response.data)
             setLogin(initLogin)
-        })
+            window.localStorage.setItem('token', JSON.stringify(response.data))
+        }).catch(error => {
+            alert('Credenciais inválidas');
+        }) 
     }
 
     const loginNameHandler = (event) => {

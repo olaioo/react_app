@@ -3,18 +3,13 @@ import axios from 'axios'
 import Login from './Login'
 import Table from './components/Table'
 import Documento from './Documento'
+import Togglable from './components/Togglable'
+import Pessoa, {initPessoa} from './Pessoa'
 
 const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + "/pessoas"
 
-const initPessoa = {
-    id: 0,
-    name: '',
-    age: '',
-    password: ''
-}
-
 const delPessoaHandler = (pessoas, setPessoas) => (id) => () => {
-    axios.delete(urlService+"/"+id).then(
+    axios.delete(urlService + "/" + id).then(
         updatePessoas(setPessoas)
     )
 }
@@ -24,11 +19,6 @@ const editarPessoaHandler = (pessoas, setNewPessoa, setEditarPessoa) => (id) => 
     setEditarPessoa(true)
 }
 
-const cancelarEdicao = (setEditarPessoa, setNewPessoa) => () => {
-    setEditarPessoa(false)
-    setNewPessoa(initPessoa)
-}
-
 const updatePessoas = (setPessoas) => {
     axios.get(urlService).then(response => {
         console.log(response.data)
@@ -36,84 +26,49 @@ const updatePessoas = (setPessoas) => {
     })
 }
 
+const clearLoggedUser = (setToken) => () => {
+    setToken(undefined);
+    window.localStorage.clear();
+}
+
 const App = () => {
     const [pessoas, setPessoas] = useState([])
     const [newPessoa, setNewPessoa] = useState(initPessoa)
     const [editarPessoa, setEditarPessoa] = useState(false)
     const [token, setToken] = useState()
+    const documentoFormRef = React.createRef()
 
     useEffect(() => {
+        setToken(JSON.parse(window.localStorage.getItem('token')))
         updatePessoas(setPessoas)
     }, [])
 
-    const newNomeHandler = (event) => {
-        setNewPessoa({ ...newPessoa, name: event.target.value })
-    }
-
-    const newAgeHandler = (event) => {
-        setNewPessoa({ ...newPessoa, age: event.target.value })
-    }
-
-    const newPasswordHandler = (event) => {
-        setNewPessoa({ ...newPessoa, password: event.target.value })
-    }
-
-    const addPessoa = (event) => {
-        event.preventDefault()
-        console.log(urlService)
-        if (editarPessoa) {
-            axios.put(urlService+"/"+newPessoa.id, newPessoa).then(response =>{
-                updatePessoas(setPessoas)
-            })
-            setEditarPessoa(false)
-        } else {
-            if (pessoas.some(p => p.name === newPessoa.name)) {
-                alert('Nome já existe')
-                return
-            }
-            newPessoa['id'] = Math.max(...pessoas.map(p => p.id), 0) + 1
-            axios.post(urlService, newPessoa).then(response => {
-                updatePessoas(setPessoas)
-            })
-        }
-        setNewPessoa(initPessoa)
-    }
-
     return (
         <div>
+            <h1>Login</h1>
             {!token ? <>
-                <h1>Login</h1>
-                <Login setToken={setToken}/>
+                <Login setToken={setToken} />
+            </>
+                : <>
+                    <label>{token['name']}</label> <button onClick={clearLoggedUser(setToken)}>logout</button>
+                    <h1>Pessoas</h1>
+                    <div>
+                        <Table content={pessoas}
+                            structure={[{ 'ID': 'id' },
+                            { 'Nome': 'name' },
+                            { 'Idade': 'age' },
+                            { 'Documentos': 'documentos', 'structure': [{ 'ID': 'id' }, { 'Conteúdo': 'content' }] },
+                            { 'Editar': 'editar', 'buttonListener': editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa) },
+                            { 'Deletar': 'excluir', 'buttonListener': delPessoaHandler(pessoas, setPessoas) }
+                            ]} />
+                    </div>
+                    <h1>{editarPessoa ? 'Editar Pessoa' : 'Adicionar Pessoa'}</h1>
+                    <Pessoa pessoas={pessoas} setPessoas={setPessoas} newPessoa={newPessoa} setNewPessoa={setNewPessoa} editarPessoa={editarPessoa} setEditarPessoa={setEditarPessoa} updatePessoas={updatePessoas}/>
+
+                    <Togglable buttonLabel="Adicionar Documento" ref={documentoFormRef}>
+                        <Documento token={token} doc={documentoFormRef} />
+                    </Togglable>
                 </>
-            : <>
-            <h1>Pessoas</h1>
-            <div>
-                <Table content={pessoas}
-                    structure={[{'ID': 'id'},
-                                {'Nome': 'name'}, 
-                                {'Idade': 'age'},
-                                {'Documentos': 'documentos', 'structure': [{'ID': 'id'}, {'Conteúdo': 'content'}]},
-                                {'Editar':'editar', 'buttonListener': editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa)}, 
-                                {'Deletar':'excluir', 'buttonListener': delPessoaHandler(pessoas, setPessoas)}
-                                ]}/>
-            </div>
-            <h1>{editarPessoa ? 'Editar Pessoa' : 'Adicionar Pessoa'}</h1>
-            <form onSubmit={addPessoa}>
-                <div>
-                    <label>Nome: </label><input onChange={newNomeHandler} value={newPessoa.name} />
-                </div>
-                <div>
-                    <label>Age: </label><input onChange={newAgeHandler} value={newPessoa.age} />
-                </div>
-                {!editarPessoa && <div>
-                    <label>Password: </label><input type='password' onChange={newPasswordHandler} value={newPessoa.password} />
-                </div>}
-                <button type='submit'>Gravar</button>
-                {editarPessoa &&
-                    <button onClick={cancelarEdicao(setEditarPessoa, setNewPessoa)}>Cancelar</button>
-                }
-            </form>
-            <Documento token={token}/> </>
             }
         </div>
 
