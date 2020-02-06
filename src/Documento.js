@@ -8,17 +8,17 @@ const initDocumento = {
     important: false
 }
 
-const Documento = ({token, doc}) => {
+const Documento = ({ token, doc, name, important }) => {
     const [documento, setDocumento] = useState(initDocumento)
 
-    const config = {    
-        headers: { Authorization: "bearer " + token.token }, 
+    const config = {
+        headers: { Authorization: 'bearer ' + token.token },
     }
 
     const saveDocumentoHandler = (event) => {
         event.preventDefault()
 
-        axios.post(urlBase, {...documento, pessoa: token.id}, config).then(response => {
+        axios.post(urlBase, { ...documento, pessoa: token.id }, config).then(() => {
             setDocumento(initDocumento)
             doc.current.toggleVisibility()
         })
@@ -37,10 +37,10 @@ const Documento = ({token, doc}) => {
             <h1>Adicionar Documento</h1>
             <form onSubmit={saveDocumentoHandler}>
                 <div>
-                    <label>Name: </label><input onChange={contentHandler}></input>
+                    <label>Name: </label><input onChange={contentHandler} value={name}/>
                 </div>
                 <div>
-                    <label>Importante: </label><input type='checkbox' onChange={importantHandler}></input>
+                    <label>Importante: </label><input type='checkbox' onChange={importantHandler} value={important}/>
                 </div>
                 <div>
                     <button type='submit'>Gravar</button>

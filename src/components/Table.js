@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from './Button'
 
-const Table = ({ structure, content}) => {
+const Table = ({ structure, content }) => {
     //const structure = Object.keys(content[0])
 
     const renderStructure = () => (
@@ -36,7 +36,7 @@ const Table = ({ structure, content}) => {
 
     const renderRow = (row, i) => {
         return (
-            <tr key={i}>
+            <tr className='pessoa' key={i}>
                 {structure.map((att, i) => renderCellByAtt(row, att, i))}
             </tr>
         )

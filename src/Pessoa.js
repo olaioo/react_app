@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
-const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + "/pessoas"
+const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + '/pessoas'
 
 const initPessoa = () => ({
     id: 0,
@@ -11,7 +11,7 @@ const initPessoa = () => ({
 })
 
 
-const Pessoa = ({pessoas, setPessoas, newPessoa, setNewPessoa, editarPessoa, setEditarPessoa, updatePessoas}) => {
+const Pessoa = ({ pessoas, setPessoas, newPessoa, setNewPessoa, editarPessoa, setEditarPessoa, updatePessoas }) => {
 
     const newNomeHandler = (event) => {
         setNewPessoa({ ...newPessoa, name: event.target.value })
@@ -29,7 +29,7 @@ const Pessoa = ({pessoas, setPessoas, newPessoa, setNewPessoa, editarPessoa, set
         event.preventDefault()
         console.log(urlService)
         if (editarPessoa) {
-            axios.put(urlService + "/" + newPessoa.id, newPessoa).then(response => {
+            axios.put(urlService + '/' + newPessoa.id, newPessoa).then(() => {
                 updatePessoas(setPessoas)
             })
             setEditarPessoa(false)
@@ -39,7 +39,7 @@ const Pessoa = ({pessoas, setPessoas, newPessoa, setNewPessoa, editarPessoa, set
                 return
             }
             newPessoa['id'] = Math.max(...pessoas.map(p => p.id), 0) + 1
-            axios.post(urlService, newPessoa).then(response => {
+            axios.post(urlService, newPessoa).then(() => {
                 updatePessoas(setPessoas)
             })
         }
@@ -71,4 +71,4 @@ const Pessoa = ({pessoas, setPessoas, newPessoa, setNewPessoa, editarPessoa, set
 }
 
 export default Pessoa
-export {Pessoa, initPessoa}
+export { Pessoa, initPessoa }

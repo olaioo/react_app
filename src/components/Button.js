@@ -1,9 +1,9 @@
-import React from 'react';
+import React from 'react'
 
-const Button = ({name, listener}) => {
+const Button = ({ name, listener }) => {
     return (
         <button onClick={listener}>{name}</button>
     )
 }
 
-export default Button;
+export default Button

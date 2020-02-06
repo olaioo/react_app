@@ -4,14 +4,16 @@ import Login from './Login'
 import Table from './components/Table'
 import Documento from './Documento'
 import Togglable from './components/Togglable'
-import Pessoa, {initPessoa} from './Pessoa'
+import Pessoa, { initPessoa } from './Pessoa'
 
-const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + "/pessoas"
+const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + '/pessoas'
 
 const delPessoaHandler = (pessoas, setPessoas) => (id) => () => {
-    axios.delete(urlService + "/" + id).then(
-        updatePessoas(setPessoas)
-    )
+    if (window.confirm('Confimar a exclusão?')) {
+        axios.delete(urlService + '/' + id).then(
+            updatePessoas(setPessoas)
+        )
+    }
 }
 
 const editarPessoaHandler = (pessoas, setNewPessoa, setEditarPessoa) => (id) => () => {
@@ -27,8 +29,8 @@ const updatePessoas = (setPessoas) => {
 }
 
 const clearLoggedUser = (setToken) => () => {
-    setToken(undefined);
-    window.localStorage.clear();
+    setToken(undefined)
+    window.localStorage.clear()
 }
 
 const App = () => {
@@ -55,11 +57,11 @@ const App = () => {
                     <div>
                         <Table content={pessoas}
                             structure={[{ 'ID': 'id' },
-                            { 'Nome': 'name' },
-                            { 'Idade': 'age' },
-                            { 'Documentos': 'documentos', 'structure': [{ 'ID': 'id' }, { 'Conteúdo': 'content' }] },
-                            { 'Editar': 'editar', 'buttonListener': editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa) },
-                            { 'Deletar': 'excluir', 'buttonListener': delPessoaHandler(pessoas, setPessoas) }
+                                { 'Nome': 'name' },
+                                { 'Idade': 'age' },
+                                { 'Documentos': 'documentos', 'structure': [{ 'ID': 'id' }, { 'Conteúdo': 'content' }] },
+                                { 'Editar': 'editar', 'buttonListener': editarPessoaHandler(pessoas, setNewPessoa, setEditarPessoa) },
+                                { 'Deletar': 'excluir', 'buttonListener': delPessoaHandler(pessoas, setPessoas) }
                             ]} />
                     </div>
                     <h1>{editarPessoa ? 'Editar Pessoa' : 'Adicionar Pessoa'}</h1>

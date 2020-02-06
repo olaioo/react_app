@@ -3,30 +3,30 @@ import axios from 'axios'
 
 const urlBase =  process.env.REACT_APP_PESSOA_SERVICE_URL
 
-const initLogin = {name: '', password: ''}
+const initLogin = { name: '', password: '' }
 
-const Login = ({setToken}) => {
+const Login = ({ setToken }) => {
     const [login, setLogin] = useState(initLogin)
-    
-    const loginHandler = (event) =>{
+
+    const loginHandler = (event) => {
         event.preventDefault()
         console.log(login)
-        axios.post(urlBase+"/login", login).then(response => {
+        axios.post(urlBase+'/login', login).then(response => {
             console.log(response)
             setToken(response.data)
             setLogin(initLogin)
             window.localStorage.setItem('token', JSON.stringify(response.data))
-        }).catch(error => {
-            alert('Credenciais inválidas');
-        }) 
+        }).catch( () => {
+            alert('Credenciais inválidas')
+        })
     }
 
     const loginNameHandler = (event) => {
-        setLogin({...login, name: event.target.value})
+        setLogin({ ...login, name: event.target.value })
     }
 
     const loginPasswordHandler = (event) => {
-        setLogin({...login, password: event.target.value})
+        setLogin({ ...login, password: event.target.value })
     }
 
     return (
