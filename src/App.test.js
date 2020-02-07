@@ -1,5 +1,6 @@
 import React from 'react'
-import { render,  waitForElement } from '@testing-library/react'
+import { render, waitForElement } from '@testing-library/react'
+import { prettyDOM } from '@testing-library/dom'
 import App from './App'
 
 const token = {
@@ -14,14 +15,37 @@ describe('<App/>', () => {
         window.localStorage.setItem('token', JSON.stringify(token.toString()))
     })
 
-    test('render all pessoas', async () => {
+    test('render all pessoas authorized', async () => {
         const component = render(
-            <App/>
+            <App />
         )
-        await waitForElement(() => component.container.querySelector('.pessoa'))
+        await waitForElement(() => component.container.querySelector('.tableBody'))
 
-        const pessoas = component.container.querySelector('.pessoa')
-        expect(pessoas.length).toBe(4)
+        const loginForm = component.container.querySelector('#loginForm')
+        expect(loginForm).toBe(null)
 
+        const pessoas = component.container.querySelector('.tableBody')
+        expect(pessoas.childElementCount).toBe(4)
+
+        expect(pessoas).toHaveTextContent('Joao')
+
+        expect(pessoas).toHaveTextContent('Cleber')
+
+        expect(pessoas).toHaveTextContent('Maria')
+
+        expect(pessoas).toHaveTextContent('Teste')
+    })
+
+    test('render all pessoas unauthorized', async () => {
+        window.localStorage.clear()
+        const component = render(
+            <App />
+        )
+
+        const loginForm = component.container.querySelector('#loginForm')
+        expect(loginForm).toBeDefined()
+
+        const pessoas = component.container.querySelector('.tableBody')
+        expect(pessoas).toBe(null)
     })
 })

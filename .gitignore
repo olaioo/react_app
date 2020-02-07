@@ -4,6 +4,7 @@ build/
 dist/
 node_modules/
 flask/
+coverage/
 
 #Enviroment vars
 .env*

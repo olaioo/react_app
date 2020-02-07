@@ -29,14 +29,14 @@ const Table = ({ structure, content }) => {
     }
 
     const renderContent = () => (
-        <tbody>
+        <tbody className='tableBody'>
             {content.map((row, i) => renderRow(row, i))}
         </tbody>
     )
 
     const renderRow = (row, i) => {
         return (
-            <tr className='pessoa' key={i}>
+            <tr key={i}>
                 {structure.map((att, i) => renderCellByAtt(row, att, i))}
             </tr>
         )

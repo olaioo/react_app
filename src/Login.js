@@ -30,7 +30,7 @@ const Login = ({ setToken }) => {
     }
 
     return (
-        <form onSubmit={loginHandler}>
+        <form id='loginForm' onSubmit={loginHandler}>
             <div>
                 <label>Name: </label><input onChange={loginNameHandler}></input>
             </div>

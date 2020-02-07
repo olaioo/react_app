@@ -5,6 +5,9 @@ import Table from './components/Table'
 import Documento from './Documento'
 import Togglable from './components/Togglable'
 import Pessoa, { initPessoa } from './Pessoa'
+import Counter, { useCounter } from './components/Counter'
+import Button from './components/Button'
+import * as hooks from './hooks'
 
 const urlService = process.env.REACT_APP_PESSOA_SERVICE_URL + '/pessoas'
 
@@ -23,7 +26,6 @@ const editarPessoaHandler = (pessoas, setNewPessoa, setEditarPessoa) => (id) => 
 
 const updatePessoas = (setPessoas) => {
     axios.get(urlService).then(response => {
-        console.log(response.data)
         setPessoas(response.data)
     })
 }
@@ -31,6 +33,10 @@ const updatePessoas = (setPessoas) => {
 const clearLoggedUser = (setToken) => () => {
     setToken(undefined)
     window.localStorage.clear()
+}
+
+const decreaseCount = (manager) => () => {
+    manager.decrease()
 }
 
 const App = () => {
@@ -45,8 +51,16 @@ const App = () => {
         updatePessoas(setPessoas)
     }, [])
 
+    const managerCount = useCounter()
+
+    const inputTeste = hooks.useField('text')
+
     return (
         <div>
+            <input {...inputTeste.spread}/>
+            <Button name='Reset' listener={inputTeste.reset}/>
+            <Counter manager={managerCount}/>
+            <Button name='-' listener={decreaseCount(managerCount)}/>
             <h1>Login</h1>
             {!token ? <>
                 <Login setToken={setToken} />
